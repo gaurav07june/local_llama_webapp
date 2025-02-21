@@ -21,7 +21,7 @@ export const ChatProvider = ({ children }) => {
 
     useEffect(() => {
         const newBackendSocket = io(BackendServerUrl, { transports: ['websocket'], });
-        // const newRelayServerSocket = io(RelayServerUrl)
+        const newRelayServerSocket = io(RelayServerUrl)
 
         newBackendSocket.on('connect', () => {
             console.log('Connected to WebSocket server');
@@ -41,25 +41,25 @@ export const ChatProvider = ({ children }) => {
 
         setBackendSocket(newBackendSocket);
 
-        // newRelayServerSocket.on('connect', () => {
-        //     console.log('Connected to Relayserver server');
-        //     newRelayServerSocket.on("roomId", (roomId) => {
-        //         console.log("Received room ID:", roomId);
+        newRelayServerSocket.on('connect', () => {
+            console.log('Connected to Relayserver server');
+            newRelayServerSocket.on("roomId", (roomId) => {
+                console.log("Received room ID:", roomId);
 
-        //         // Store the room ID for future use
-        //         // For example, you can use it in your API requests
-        //     });
-        // });
+                // Store the room ID for future use
+                // For example, you can use it in your API requests
+            });
+        });
 
-        // newRelayServerSocket.on('disconnect', () => {
-        //     console.log('Disconnected from relay server');
-        // });
+        newRelayServerSocket.on('disconnect', () => {
+            console.log('Disconnected from relay server');
+        });
 
-        // setRelayServerSocket(newRelayServerSocket)
+        setRelayServerSocket(newRelayServerSocket)
 
         return () => {
             newBackendSocket.disconnect();
-            // newRelayServerSocket.disconnect()
+            newRelayServerSocket.disconnect()
         };
     }, []);
 
