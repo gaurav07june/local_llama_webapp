@@ -1,9 +1,15 @@
-import { Ionicons } from "@expo/vector-icons"
+
 import { useRef } from "react";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import Octicons from '@expo/vector-icons/Octicons';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 
-const LeftPage = ({ handleLeftBtn, onSelectedListItem }) => {
+const LeftPage = ({
+    handleLeftBtn, onSelectedListItem,
+    isLeftBtn
+}) => {
 
     const flatListRef = useRef(null);
     const DATA = [
@@ -47,61 +53,89 @@ const LeftPage = ({ handleLeftBtn, onSelectedListItem }) => {
             ]
         },
     ];
+    const onCreateNewMassage = () => {
 
+    }
+    const onShareDelete = () => {
+
+    }
     const _renderItem = ({ item, index }) => {
         return (
-            <View style={styles.listCardUpper}>
-                <TouchableOpacity onPress={() => onSelectedListItem(item)}
-                    style={styles.listCard}>
-                    <Text numberOfLines={1}
-                        style={{}}>{item.title}</Text>
-                </TouchableOpacity>
-
-
-            </View>
-
+            <TouchableOpacity onPress={() => onSelectedListItem(item)}
+                style={styles.listCard}>
+                <Text numberOfLines={1}
+                    style={{}}>{item.title}</Text>
+            </TouchableOpacity>
         )
     }
 
     return (
         <View style={{
             flex: 1,
-            backgroundColor: "#55C1FF",
+            paddingVertical: 12,
+            paddingHorizontal: 12,
+            backgroundColor: AppColor.appbgcolor,
+            borderRightWidth: 3,
+            borderRightColor: AppColor.border
         }} >
-            <View style={{
-                backgroundColor: "#55C1FF",
-                flexDirection: "row"
+            <TouchableOpacity
+                style={{
+                    marginBottom: 12
+                }}
+                onPress={() => handleLeftBtn()}>
+                {isLeftBtn ?
+                    <Octicons name="sidebar-expand" size={24} color="black" />
+                    : <Octicons name="sidebar-collapse" size={24} color="black" />
+                }
+            </TouchableOpacity>
+            {isLeftBtn ?
+                <>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between'
+                    }}>
+                        <View style={{
+                            flexDirection: "row",
+                            justifyContent: 'center',
 
-            }} >
-                <Text>Left</Text>
-                <TouchableOpacity onPress={() => handleLeftBtn()}>
-                    <Ionicons name="send" size={24} color="black" />
-                </TouchableOpacity>
-            </View>
+                        }}>
+                            <TouchableOpacity
+                                onPress={() => onCreateNewMassage()}>
+                                <Ionicons name="add" size={20} color="black" />
+                            </TouchableOpacity>
+                            <View style={{ width: 6 }} />
+                            <Text style={styles.listHeader}>
+                                New Chat
+                            </Text>
+                        </View>
+                        <TouchableOpacity onPress={() => onShareDelete()}>
+                            <FontAwesome6 name="ellipsis" size={20} color="black" />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ height: 12 }} />
+                    <FlatList
+                        ref={flatListRef}
+                        data={DATA}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={_renderItem}
+                    // contentContainerStyle={{ paddingBottom: 10 }} 
+                    />
+                </>
 
-            <FlatList
-                ref={flatListRef}
-                data={DATA}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={_renderItem}
-                contentContainerStyle={{ paddingBottom: 10 }}
-            />
+                : null
+            }
         </View>
 
     )
 }
 const styles = StyleSheet.create({
-    listCardUpper: {
-        marginHorizontal: 5,
-        marginTop: 5,
-    },
+
     listCard: {
-        maxWidth: 150,
+        maxWidth: 500,
         backgroundColor: "#EBEBEB",
         borderRadius: 5,
         paddingHorizontal: 10,
         paddingVertical: 5,
-        marginHorizontal: 5,
         marginTop: 5,
         alignItems: 'flex-start',
         justifyContent: 'center',
@@ -109,7 +143,18 @@ const styles = StyleSheet.create({
         // marginRight: 5,
         //justifyContent: "space-between",
     },
+    listHeader: {
+        color: "black",
+        fontSize: 14,
+        fontWeight: "bold",
+        alignSelf: 'center'
+    }
 
 })
+
+const AppColor = {
+    appbgcolor: "#ffffff",
+    border: "#dae2ee"
+}
 
 export default LeftPage;

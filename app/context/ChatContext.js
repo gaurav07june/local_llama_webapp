@@ -10,8 +10,8 @@ export const ChatProvider = ({ children }) => {
     const [prompts] = useState([
         { id: 1, header: "Show me market analysis of the power sector in metros", subHeader: "Send Prompt" },
         { id: 2, header: "Show me renewable energy growth analysis", subHeader: "Send Prompt" },
-        { id: 3, header: "What are the current trends in EV market?", subHeader: "Send Prompt" },
-        { id: 4, header: "Analyze stock trends of energy companies", subHeader: "Send Prompt" },
+        // { id: 3, header: "What are the current trends in EV market?", subHeader: "Send Prompt" },
+        // { id: 4, header: "Analyze stock trends of energy companies", subHeader: "Send Prompt" },
     ]);
 
     const [chatMessages, setChatMessages] = useState([]);

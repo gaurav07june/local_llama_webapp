@@ -10,6 +10,7 @@ const ChatView = ({ messages }) => {
     const flatListRef = useRef(null);
 
     useEffect(() => {
+        console.log("kogo_os_", "meassage data : " + JSON.stringify(messages))
         if (flatListRef.current) {
             flatListRef.current.scrollToEnd({ animated: true });
         }
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
         alignSelf: "flex-start",
     },
     text: {
-        color: "white",
+        color: "black",
     },
     iconsContainer: {
         flexDirection: 'row-reverse',

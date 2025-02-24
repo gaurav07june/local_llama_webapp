@@ -83,18 +83,15 @@ const ChatScreenDemo = () => {
             flex: 1,
             flexDirection: "row"
         }}>
+            <View style={{ flex: isLeftBtn ? .30 : .035 }}>
+                <LeftPage
+                    isLeftBtn={isLeftBtn}
+                    handleLeftBtn={() => handleLeftBtn()}
+                    onSelectedListItem={(data) => _onLeftPageSelectedListItem(data)} />
+            </View>
 
-            {isLeftBtn ?
-                <View style={{ flex: .30 }}>
-                    <LeftPage
-                        handleLeftBtn={() => handleLeftBtn()}
-                        onSelectedListItem={(data) => _onLeftPageSelectedListItem(data)}
-                    />
-                </View>
-                : null
-            }
             <View style={{
-                flex: isLeftBtn ? .70 : 1,
+                flex: isLeftBtn ? .70 : .965,
                 backgroundColor: "#EA8529",
                 flexDirection: "row"
             }} >

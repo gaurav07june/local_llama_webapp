@@ -6,8 +6,8 @@ import ChatScreenDemo from './screens/ChatScreenDemo'
 export default function Index() {
   return (
     <ChatProvider>
-      {/* <ChatScreen /> */}
-      <ChatScreenDemo />
+      <ChatScreen />
+      {/* <ChatScreenDemo /> */}
     </ChatProvider>
   );
 }
