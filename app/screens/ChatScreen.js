@@ -5,27 +5,34 @@ import Header from './components/Header'
 import PromptCard from "./components/PromptCard";
 import ChatView from "./components/ChatView";
 import ChatInput from "./components/ChatInput";
+import ChatSessions from './components/ChatSessions'
 
 const ChatScreen = () => {
-    const { backendSocket, prompts, chatMessages } = useChat();
+    const { backendSocket, prompts, chatMessages, chatSessions } = useChat();
 
     return (
         <View style={styles.container}>
-            <Header title="Marketing" />
+            <View style={{ flexDirection: 'row', flex: 1 }}>
+                <ChatSessions />
+                <View style={{ width: "85%", paddingLeft: 10 }}>
+                    <Header title="Marketing" />
 
-            {chatMessages.length == 0 &&
-                <View>
-                    <Text style={styles.title}>You can ask</Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.promptContainer}>
-                        {prompts.map((prompt) => (
-                            <PromptCard key={prompt.id} prompt={prompt} />
-                        ))}
-                    </ScrollView>
+                    {chatMessages.length == 0 &&
+                        <View>
+                            <Text style={styles.title}>You can ask</Text>
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.promptContainer}>
+                                {prompts.map((prompt) => (
+                                    <PromptCard key={prompt.id} prompt={prompt} />
+                                ))}
+                            </ScrollView>
+                        </View>
+                    }
+                    <ChatView messages={chatMessages} />
+
+                    <ChatInput />
+
                 </View>
-            }
-            <ChatView messages={chatMessages} />
-
-            <ChatInput />
+            </View>
         </View>
     );
 };

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { io } from "socket.io-client";
+import { createNewChatSession, deleteAllSession, getAllChatSessions, saveMessageToThread } from '../util/ChatStoreHelper'
 
 const BackendServerUrl = 'https://dev-ws-subscription.kogo.ai';
 const RelayServerUrl = "https://kogollmrelaysocket.parikshithv.in";
@@ -14,14 +15,19 @@ export const ChatProvider = ({ children }) => {
         { id: 4, header: "Analyze stock trends of energy companies", subHeader: "Send Prompt" },
     ]);
 
+    const [chatSessions, setChatSessions] = useState([]);
     const [chatMessages, setChatMessages] = useState([]);
     const [backendSocket, setBackendSocket] = useState(null);
     const [relayServerSocket, setRelayServerSocket] = useState(null)
 
+    var shouldCreateNewSession = false
+
 
     useEffect(() => {
+        shouldCreateNewSession = true
+
         const newBackendSocket = io(BackendServerUrl, { transports: ['websocket'], });
-        const newRelayServerSocket = io(RelayServerUrl)
+        // const newRelayServerSocket = io(RelayServerUrl)
 
         newBackendSocket.on('connect', () => {
             console.log('Connected to WebSocket server');
@@ -31,7 +37,14 @@ export const ChatProvider = ({ children }) => {
         newBackendSocket.on('message', (msg) => {
             console.log("msg received ", JSON.stringify(msg))
             if (msg.is_boat_reply == "yes") {
-                setChatMessages((prev) => [...prev, { isUserChat: false, message: msg.message }]);
+                console.log("should create new session ", shouldCreateNewSession)
+                if (shouldCreateNewSession) {
+                    _createNewChatSession(msg)
+                } else {
+                    _storeMesssage(msg.thread_id, msg)
+                }
+
+                setChatMessages((prev) => [...prev, msg]);
             }
         });
 
@@ -41,27 +54,66 @@ export const ChatProvider = ({ children }) => {
 
         setBackendSocket(newBackendSocket);
 
-        newRelayServerSocket.on('connect', () => {
-            console.log('Connected to Relayserver server');
-            newRelayServerSocket.on("roomId", (roomId) => {
-                console.log("Received room ID:", roomId);
+        _fetchChatSessions()
 
-                // Store the room ID for future use
-                // For example, you can use it in your API requests
-            });
-        });
+        // newRelayServerSocket.on('connect', () => {
+        //     console.log('Connected to Relayserver server');
+        //     newRelayServerSocket.on("roomId", (roomId) => {
+        //         console.log("Received room ID:", roomId);
 
-        newRelayServerSocket.on('disconnect', () => {
-            console.log('Disconnected from relay server');
-        });
+        //         // Store the room ID for future use
+        //         // For example, you can use it in your API requests
+        //     });
+        // });
 
-        setRelayServerSocket(newRelayServerSocket)
+        // newRelayServerSocket.on('disconnect', () => {
+        //     console.log('Disconnected from relay server');
+        // });
+
+        // setRelayServerSocket(newRelayServerSocket)
 
         return () => {
             newBackendSocket.disconnect();
-            newRelayServerSocket.disconnect()
+            // newRelayServerSocket.disconnect()
         };
     }, []);
+
+    const _fetchChatSessions = async () => {
+        console.log('fetching all chat sesions')
+        const sessions = await getAllChatSessions();
+        console.log("all sessions ", JSON.stringify(sessions))
+        setChatSessions(sessions);
+    };
+
+    const _createNewChatSession = async (msgData) => {
+        try {
+            console.log('creating new chat session with thread id ', msgData.thread_id)
+            const threadId = await createNewChatSession(msgData.thread_id);
+            console.log("chat session created with thread id ", threadId)
+            shouldCreateNewSession = false
+            _storeMesssage(threadId, msgData)
+            _fetchChatSessions()
+        } catch (error) {
+
+        }
+    }
+
+    const _storeMesssage = async (thread_id, message) => {
+        try {
+            await saveMessageToThread(thread_id, message)
+        } catch (error) {
+
+        }
+    }
+
+    const removeAllSessions = async () => {
+        try {
+            await deleteAllSession()
+            _fetchChatSessions()
+        } catch (error) {
+            console.log("Error deleting all sessions")
+        }
+    }
 
     const joinChatRoom = (newBackendSocket) => {
         console.log("joining chat room");
@@ -79,7 +131,7 @@ export const ChatProvider = ({ children }) => {
 
         if (msgTxt.trim().length === 0) return;
         if (!backendSocket) return
-        setChatMessages((prev) => [...prev, { isUserChat: true, message: msgTxt }]);
+        setChatMessages((prev) => [...prev, { is_boat_reply: "no", message: msgTxt }]);
 
         const messagePayload = {
             message: msgTxt,
@@ -89,7 +141,7 @@ export const ChatProvider = ({ children }) => {
             sender: "parikshit",
             guest_sender: "kogo",
             guest_name: "Bharat Mobility",
-            thread_id: "",
+            thread_id: chatMessages.length > 1 ? chatMessages[1].thread_id : "",
             deployment_id: "6772400f68158be76262b2a3",
             kogo_swarm_id: null,
         };
@@ -102,7 +154,7 @@ export const ChatProvider = ({ children }) => {
 
 
     return (
-        <ChatContext.Provider value={{ backendSocket, prompts, chatMessages, sendMessage }}>
+        <ChatContext.Provider value={{ backendSocket, prompts, chatMessages, sendMessage, chatSessions, removeAllSessions }}>
             {children}
         </ChatContext.Provider>
     );

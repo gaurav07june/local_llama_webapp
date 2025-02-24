@@ -3,7 +3,6 @@ import { View, Text, ScrollView, StyleSheet, FlatList } from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { useChat } from "@/app/context/ChatContext";
 
 const ChatView = ({ messages }) => {
 
@@ -17,9 +16,9 @@ const ChatView = ({ messages }) => {
 
     const _renderItem = ({ item, index }) => {
         return (
-            <View style={item.isUserChat ? styles.userMessage : styles.aiMessage}>
+            <View style={item.is_boat_reply == "no" ? styles.userMessage : styles.aiMessage}>
                 <Text style={styles.text}>{item.message}</Text>
-                {!item.isUserChat &&
+                {item.is_boat_reply == "yes" &&
                     <View style={styles.iconsContainer}>
                         <FontAwesome name="edit" size={15} color="#808080" />
                         <View style={styles.spacer} />
