@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { io } from "socket.io-client";
-import { createNewChatSession, deleteAllSession, getAllChatSessions, saveMessageToThread, getMessagesForThread } from '../util/ChatStoreHelper'
+import { createNewChatSession, deleteAllSession, getAllChatSessions, saveMessageToThread, getMessagesForThread, deleteThreadChats } from '../util/ChatStoreHelper'
 
 const BackendServerUrl = 'https://dev-ws-subscription.kogo.ai';
 const RelayServerUrl = "https://kogollmrelaysocket.parikshithv.in";
@@ -125,6 +125,15 @@ export const ChatProvider = ({ children }) => {
         }
     }
 
+    const deleteThread = async (threadId) => {
+        try {
+            await deleteThreadChats(threadId)
+            _fetchChatSessions()
+        } catch (error) {
+
+        }
+    }
+
     const joinChatRoom = (newBackendSocket) => {
         console.log("joining chat room");
         newBackendSocket.emit("join_kogoos", {
@@ -164,7 +173,11 @@ export const ChatProvider = ({ children }) => {
 
 
     return (
-        <ChatContext.Provider value={{ backendSocket, prompts, chatMessages, sendMessage, chatSessions, removeAllSessions, retrieveTheadChat }}>
+        <ChatContext.Provider value={{
+            backendSocket, prompts, chatMessages, sendMessage,
+            chatSessions, removeAllSessions, retrieveTheadChat,
+            deleteThread
+        }}>
             {children}
         </ChatContext.Provider>
     );

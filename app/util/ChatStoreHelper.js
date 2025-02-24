@@ -64,3 +64,21 @@ export const deleteAllSession = async () => {
         console.log("Error deleteing sessions")
     }
 }
+
+export const deleteThreadChats = async (threadId) => {
+    try {
+        const storedSessions = await AsyncStorage.getItem("chat_sessions");
+        let chatSessions = storedSessions ? JSON.parse(storedSessions) : [];
+
+        const sessionIndex = chatSessions.findIndex(session => session.thread_id === threadId);
+        console.log("session index", sessionIndex)
+        console.log("thread to be deleted ", JSON.stringify(chatSessions[sessionIndex]))
+
+        if (sessionIndex !== -1) {
+            chatSessions.splice(sessionIndex, 1);
+            await AsyncStorage.setItem("chat_sessions", JSON.stringify(chatSessions));
+        }
+    } catch (error) {
+
+    }
+}

@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, FlatList, TouchableOpacity } from 'react-native
 
 const ChatSessions = () => {
 
-    const { removeAllSessions, chatSessions, retrieveTheadChat } = useChat()
+    const { removeAllSessions, chatSessions, retrieveTheadChat, deleteThread } = useChat()
 
     const _deleteAllSessions = async () => {
         try {
@@ -19,14 +19,27 @@ const ChatSessions = () => {
         retrieveTheadChat(threadId)
     }
 
+    const _onTheadDelete = (threadId) => {
+        console.log('deleting thread ', threadId)
+        deleteThread(threadId)
+    }
+
 
     const _renderItem = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => _onThreadClick(item.thread_id)}>
-                <Text style={styles.title}>
-                    {item.msgData[0].thread_title}
-                </Text>
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity onPress={() => _onThreadClick(item.thread_id)}>
+                    <Text style={styles.title}>
+                        {item.msgData[0].thread_title}
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => _onTheadDelete(item.thread_id)}>
+                    <Text style={styles.deletetext}>
+                        Delete
+                    </Text>
+                </TouchableOpacity>
+            </View>
+
         )
     }
     return (
@@ -35,6 +48,7 @@ const ChatSessions = () => {
                 <Text style={styles.heading}>
                     Chat history
                 </Text>
+
                 <TouchableOpacity onPress={_deleteAllSessions} style={styles.deleteBtn}>
                     <Text style={styles.deletetext}>
                         Delete
