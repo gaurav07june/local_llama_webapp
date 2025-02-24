@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { io } from "socket.io-client";
-import { createNewChatSession, deleteAllSession, getAllChatSessions, saveMessageToThread } from '../util/ChatStoreHelper'
+import { createNewChatSession, deleteAllSession, getAllChatSessions, saveMessageToThread, getMessagesForThread } from '../util/ChatStoreHelper'
 
 const BackendServerUrl = 'https://dev-ws-subscription.kogo.ai';
 const RelayServerUrl = "https://kogollmrelaysocket.parikshithv.in";
@@ -35,14 +35,14 @@ export const ChatProvider = ({ children }) => {
         });
 
         newBackendSocket.on('message', (msg) => {
-            console.log("msg received ", JSON.stringify(msg))
+            // console.log("msg received ", JSON.stringify(msg))
+            console.log("should create new session ", shouldCreateNewSession)
+            if (shouldCreateNewSession) {
+                _createNewChatSession(msg)
+            } else {
+                _storeMesssage(msg.thread_id, msg)
+            }
             if (msg.is_boat_reply == "yes") {
-                console.log("should create new session ", shouldCreateNewSession)
-                if (shouldCreateNewSession) {
-                    _createNewChatSession(msg)
-                } else {
-                    _storeMesssage(msg.thread_id, msg)
-                }
 
                 setChatMessages((prev) => [...prev, msg]);
             }
@@ -91,8 +91,8 @@ export const ChatProvider = ({ children }) => {
             const threadId = await createNewChatSession(msgData.thread_id);
             console.log("chat session created with thread id ", threadId)
             shouldCreateNewSession = false
-            _storeMesssage(threadId, msgData)
-            _fetchChatSessions()
+            await _storeMesssage(threadId, msgData)
+            await _fetchChatSessions()
         } catch (error) {
 
         }
@@ -100,7 +100,8 @@ export const ChatProvider = ({ children }) => {
 
     const _storeMesssage = async (thread_id, message) => {
         try {
-            await saveMessageToThread(thread_id, message)
+            console.log("storing messga to thread ", thread_id)
+            let data = await saveMessageToThread(thread_id, message)
         } catch (error) {
 
         }
@@ -112,6 +113,15 @@ export const ChatProvider = ({ children }) => {
             _fetchChatSessions()
         } catch (error) {
             console.log("Error deleting all sessions")
+        }
+    }
+
+    const retrieveTheadChat = async (threadId) => {
+        try {
+            let msgData = await getMessagesForThread(threadId)
+            setChatMessages(msgData)
+        } catch (error) {
+
         }
     }
 
@@ -154,7 +164,7 @@ export const ChatProvider = ({ children }) => {
 
 
     return (
-        <ChatContext.Provider value={{ backendSocket, prompts, chatMessages, sendMessage, chatSessions, removeAllSessions }}>
+        <ChatContext.Provider value={{ backendSocket, prompts, chatMessages, sendMessage, chatSessions, removeAllSessions, retrieveTheadChat }}>
             {children}
         </ChatContext.Provider>
     );

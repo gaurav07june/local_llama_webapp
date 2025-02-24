@@ -33,6 +33,8 @@ export const saveMessageToThread = async (thread_id, message) => {
         let chatSessions = storedSessions ? JSON.parse(storedSessions) : [];
 
         const sessionIndex = chatSessions.findIndex(session => session.thread_id === thread_id);
+        console.log("session index", sessionIndex)
+        console.log("dat to be pushed to ", JSON.stringify(chatSessions[sessionIndex]))
 
         if (sessionIndex !== -1) {
             chatSessions[sessionIndex].msgData.push(message);
@@ -49,7 +51,7 @@ export const getMessagesForThread = async (thread_id) => {
         const chatSessions = storedSessions ? JSON.parse(storedSessions) : [];
 
         const chatSession = chatSessions.find(session => session.thread_id === thread_id);
-        return chatSession ? chatSession.messages : [];
+        return chatSession ? chatSession.msgData : [];
     } catch (error) {
         console.error("Error loading messages", error);
     }

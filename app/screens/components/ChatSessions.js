@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, FlatList, TouchableOpacity } from 'react-native
 
 const ChatSessions = () => {
 
-    const { removeAllSessions, chatSessions } = useChat()
+    const { removeAllSessions, chatSessions, retrieveTheadChat } = useChat()
 
     const _deleteAllSessions = async () => {
         try {
@@ -14,11 +14,17 @@ const ChatSessions = () => {
         }
     }
 
+    const _onThreadClick = (threadId) => {
+        console.log("fetching thread id ", threadId)
+        retrieveTheadChat(threadId)
+    }
+
+
     const _renderItem = ({ item }) => {
         return (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => _onThreadClick(item.thread_id)}>
                 <Text style={styles.title}>
-                    hellow
+                    {item.msgData[0].thread_title}
                 </Text>
             </TouchableOpacity>
         )
