@@ -3,10 +3,14 @@ import { View, Text, ScrollView, StyleSheet, FlatList } from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { useChat } from "../../context/ChatContext"
+
 
 const ChatView = ({ messages }) => {
 
     const flatListRef = useRef(null);
+
+    const { isChatLoader } = useChat();
 
     useEffect(() => {
         if (flatListRef.current) {
@@ -31,6 +35,10 @@ const ChatView = ({ messages }) => {
 
                     </View>
                 }
+                {index == messages.length && isChatLoader ?
+                    <Text style={styles.text}>{"chat is loading ..."}</Text>
+                    : <></>
+                }
             </View>
         )
     }
@@ -53,7 +61,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     userMessage: {
-        backgroundColor: "#007AFF",
+        backgroundColor: "#f4f4f4",
         padding: 10,
         borderRadius: 10,
         marginBottom: 5,
@@ -65,7 +73,7 @@ const styles = StyleSheet.create({
         alignSelf: "flex-start",
     },
     text: {
-        color: "white",
+        color: "#000000",
     },
     iconsContainer: {
         flexDirection: 'row-reverse',
