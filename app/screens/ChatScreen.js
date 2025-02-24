@@ -8,7 +8,7 @@ import ChatInput from "./components/ChatInput";
 import ChatSessions from './components/ChatSessions'
 
 const ChatScreen = () => {
-    const { backendSocket, prompts, chatMessages, chatSessions } = useChat();
+    const { backendSocket, prompts, chatMessages } = useChat();
 
     return (
         <View style={styles.container}>
