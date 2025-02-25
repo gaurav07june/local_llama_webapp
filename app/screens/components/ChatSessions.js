@@ -82,20 +82,23 @@ const ChatSessions = ({
                         justifyContent: 'space-between',
 
                     }}>
-                        <View style={{
-                            flexDirection: "row",
-                            justifyContent: 'center',
+                        <TouchableOpacity
+                            onPress={() => onCreateNewMassage()}>
+                            <View style={{
+                                flexDirection: "row",
+                                justifyContent: 'center',
 
-                        }}>
-                            <TouchableOpacity
-                                onPress={() => onCreateNewMassage()}>
+                            }}>
+
                                 <Ionicons name="add" size={20} color="black" />
-                            </TouchableOpacity>
-                            <View style={{ width: 6 }} />
-                            <Text style={styles.listHeader}>
-                                New Chat
-                            </Text>
-                        </View>
+                                <View style={{ width: 6 }} />
+                                <Text style={styles.listHeader}>
+                                    New Chat
+                                </Text>
+
+
+                            </View>
+                        </TouchableOpacity>
                         <TouchableOpacity onPress={() => _deleteAllSessions()}>
                             <EvilIcons name="trash" size={24} color="black" />
                         </TouchableOpacity>

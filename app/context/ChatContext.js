@@ -19,7 +19,7 @@ export const ChatProvider = ({ children }) => {
     const [chatMessages, setChatMessages] = useState([]);
     const [backendSocket, setBackendSocket] = useState(null);
     const [relayServerSocket, setRelayServerSocket] = useState(null)
-    const [isChatLoader, setIsChatLoader] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     var shouldCreateNewSession = false
 
@@ -44,7 +44,7 @@ export const ChatProvider = ({ children }) => {
                 _storeMesssage(msg.thread_id, msg)
             }
             if (msg.is_boat_reply == "yes") {
-
+                setIsLoading(false)
                 setChatMessages((prev) => [...prev, msg]);
             }
 
@@ -158,7 +158,7 @@ export const ChatProvider = ({ children }) => {
         if (!backendSocket) return;
 
         setChatMessages((prev) => [...prev, { is_boat_reply: "no", message: msgTxt }]);
-        // setIsChatLoader(true)
+        setIsLoading(true)
 
 
         const messagePayload = {
@@ -184,7 +184,7 @@ export const ChatProvider = ({ children }) => {
         <ChatContext.Provider value={{
             backendSocket, prompts, chatMessages, sendMessage,
             chatSessions, removeAllSessions, retrieveTheadChat,
-            deleteThread, onCreateNewThread, isChatLoader
+            deleteThread, onCreateNewThread, isLoading
         }}>
             {children}
         </ChatContext.Provider>

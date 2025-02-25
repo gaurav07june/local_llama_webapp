@@ -10,7 +10,7 @@ import ChatSessions from './components/ChatSessions'
 
 const ChatScreen = () => {
     // hook
-    const { backendSocket, prompts, chatMessages, sendMessage } = useChat();
+    const { backendSocket, prompts, chatMessages, sendMessage, isLoading } = useChat();
 
     const [isLeftBtn, setIsLeftBtn] = useState(true);
     const [selectedIndex, SetSelectedIndex] = useState(-1);
@@ -61,7 +61,7 @@ const ChatScreen = () => {
                             </ScrollView>
                         </View>
                     }
-                    <ChatView messages={chatMessages} />
+                    <ChatView />
 
                 </View>
                 <ChatInput />

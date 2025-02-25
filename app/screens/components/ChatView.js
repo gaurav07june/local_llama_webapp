@@ -6,40 +6,41 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useChat } from "../../context/ChatContext"
 
 
-const ChatView = ({ messages }) => {
+const ChatView = () => {
 
     const flatListRef = useRef(null);
 
-    const { isChatLoader } = useChat();
+    const { isLoading, chatMessages } = useChat();
 
     useEffect(() => {
         if (flatListRef.current) {
             flatListRef.current.scrollToEnd({ animated: true });
         }
-    }, [messages]);
+    }, [chatMessages]);
 
     const _renderItem = ({ item, index }) => {
         return (
-            <View style={item.is_boat_reply == "no" ? styles.userMessage : styles.aiMessage}>
-                <Text style={styles.text}>{item.message}</Text>
-                {item.is_boat_reply == "yes" &&
-                    <View style={styles.iconsContainer}>
-                        <FontAwesome name="edit" size={15} color="#808080" />
-                        <View style={styles.spacer} />
-                        <SimpleLineIcons name="dislike" size={15} color="#808080" />
-                        <View style={styles.spacer} />
-                        <SimpleLineIcons name="like" size={15} color="#808080" />
-                        <View style={styles.spacer} />
-                        <Feather name="copy" size={15} color="#808080" />
+            <View>
+                <View style={item.is_boat_reply == "no" ? styles.userMessage : styles.aiMessage}>
+                    <Text style={styles.text}>{item.message}</Text>
+                    {item.is_boat_reply == "yes" &&
+                        <View style={styles.iconsContainer}>
+                            <FontAwesome name="edit" size={15} color="#808080" />
+                            <View style={styles.spacer} />
+                            <SimpleLineIcons name="dislike" size={15} color="#808080" />
+                            <View style={styles.spacer} />
+                            <SimpleLineIcons name="like" size={15} color="#808080" />
+                            <View style={styles.spacer} />
+                            <Feather name="copy" size={15} color="#808080" />
 
 
-                    </View>
-                }
-                {index == messages.length && isChatLoader ?
-                    <Text style={styles.text}>{"chat is loading ..."}</Text>
-                    : <></>
-                }
+                        </View>
+                    }
+
+                </View >
+                {(isLoading && index == chatMessages.length - 1) && < Text style={styles.loaderText}>Agent Working...</Text>}
             </View>
+
         )
     }
 
@@ -47,10 +48,10 @@ const ChatView = ({ messages }) => {
 
         <FlatList
             ref={flatListRef}
-            data={messages}
+            data={chatMessages}
             keyExtractor={(item, index) => index.toString()}
             renderItem={_renderItem}
-            contentContainerStyle={{ paddingBottom: 10 }}
+            contentContainerStyle={{ paddingBottom: 200 }}
         />
     );
 };
@@ -82,6 +83,13 @@ const styles = StyleSheet.create({
     },
     spacer: {
         width: 10
+    },
+    loaderText: {
+        fontWeight: "thin",
+        color: "black",
+        fontSize: 13,
+        padding: 10,
+
     }
 });
 
