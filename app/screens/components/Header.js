@@ -1,11 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const Header = ({ title }) => {
     return (
         <View style={styles.header}>
-            <Ionicons name="megaphone" size={20} color="white" />
+            <AntDesign name="home" size={24} color="black" />
             <Text style={styles.title}>{title}</Text>
         </View>
     );
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        color: "white",
+        color: "black",
         marginLeft: 10,
     },
 });

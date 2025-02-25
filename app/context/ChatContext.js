@@ -11,14 +11,15 @@ export const ChatProvider = ({ children }) => {
     const [prompts] = useState([
         { id: 1, header: "Show me market analysis of the power sector in metros", subHeader: "Send Prompt" },
         { id: 2, header: "Show me renewable energy growth analysis", subHeader: "Send Prompt" },
-        { id: 3, header: "What are the current trends in EV market?", subHeader: "Send Prompt" },
-        { id: 4, header: "Analyze stock trends of energy companies", subHeader: "Send Prompt" },
+        // { id: 3, header: "What are the current trends in EV market?", subHeader: "Send Prompt" },
+        // { id: 4, header: "Analyze stock trends of energy companies", subHeader: "Send Prompt" },
     ]);
 
     const [chatSessions, setChatSessions] = useState([]);
     const [chatMessages, setChatMessages] = useState([]);
     const [backendSocket, setBackendSocket] = useState(null);
     const [relayServerSocket, setRelayServerSocket] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     var shouldCreateNewSession = false
 
@@ -43,9 +44,10 @@ export const ChatProvider = ({ children }) => {
                 _storeMesssage(msg.thread_id, msg)
             }
             if (msg.is_boat_reply == "yes") {
-
+                setIsLoading(false)
                 setChatMessages((prev) => [...prev, msg]);
             }
+
         });
 
         newBackendSocket.on('disconnect', () => {
@@ -134,6 +136,10 @@ export const ChatProvider = ({ children }) => {
         }
     }
 
+    const onCreateNewThread = () => {
+        setChatMessages([])
+    }
+
     const joinChatRoom = (newBackendSocket) => {
         console.log("joining chat room");
         newBackendSocket.emit("join_kogoos", {
@@ -149,8 +155,11 @@ export const ChatProvider = ({ children }) => {
     const sendMessage = (msgTxt) => {
 
         if (msgTxt.trim().length === 0) return;
-        if (!backendSocket) return
+        if (!backendSocket) return;
+
         setChatMessages((prev) => [...prev, { is_boat_reply: "no", message: msgTxt }]);
+        setIsLoading(true)
+
 
         const messagePayload = {
             message: msgTxt,
@@ -167,7 +176,6 @@ export const ChatProvider = ({ children }) => {
         console.log("Sending message:", messagePayload);
         backendSocket.emit("chat_kogoos", messagePayload, (response) => {
             console.log("chat_kogoos response:", response);
-
         });
     };
 
@@ -176,7 +184,7 @@ export const ChatProvider = ({ children }) => {
         <ChatContext.Provider value={{
             backendSocket, prompts, chatMessages, sendMessage,
             chatSessions, removeAllSessions, retrieveTheadChat,
-            deleteThread
+            deleteThread, onCreateNewThread, isLoading
         }}>
             {children}
         </ChatContext.Provider>

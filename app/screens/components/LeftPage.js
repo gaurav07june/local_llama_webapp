@@ -1,3 +1,4 @@
+
 import React, { useRef } from "react";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import Octicons from '@expo/vector-icons/Octicons';
@@ -6,7 +7,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useChat } from "../../context/ChatContext";
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 
-const ChatSessions = ({
+const LeftPage = ({
     handleLeftBtn, isLeftBtn, selectedIndex, onUpdatIndex
 }) => {
 
@@ -82,23 +83,20 @@ const ChatSessions = ({
                         justifyContent: 'space-between',
 
                     }}>
-                        <TouchableOpacity
-                            onPress={() => onCreateNewMassage()}>
-                            <View style={{
-                                flexDirection: "row",
-                                justifyContent: 'center',
+                        <View style={{
+                            flexDirection: "row",
+                            justifyContent: 'center',
 
-                            }}>
-
+                        }}>
+                            <TouchableOpacity
+                                onPress={() => onCreateNewMassage()}>
                                 <Ionicons name="add" size={20} color="black" />
-                                <View style={{ width: 6 }} />
-                                <Text style={styles.listHeader}>
-                                    New Chat
-                                </Text>
-
-
-                            </View>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                            <View style={{ width: 6 }} />
+                            <Text style={styles.listHeader}>
+                                New Chat
+                            </Text>
+                        </View>
                         <TouchableOpacity onPress={() => _deleteAllSessions()}>
                             <EvilIcons name="trash" size={24} color="black" />
                         </TouchableOpacity>
@@ -148,4 +146,4 @@ const AppColor = {
     border: "#dae2ee"
 }
 
-export default ChatSessions;
+export default LeftPage;
