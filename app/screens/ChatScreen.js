@@ -65,7 +65,7 @@ const ChatScreen = () => {
 
                 </View>
                 <ChatInput />
-                <View style={{ height: 20 }} />
+
             </View>
         </View>
     );

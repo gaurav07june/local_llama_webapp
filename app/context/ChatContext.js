@@ -3,7 +3,6 @@ import { io } from "socket.io-client";
 import { createNewChatSession, deleteAllSession, getAllChatSessions, saveMessageToThread, getMessagesForThread, deleteThreadChats } from '../util/ChatStoreHelper'
 
 const BackendServerUrl = 'https://dev-ws-subscription.kogo.ai';
-const RelayServerUrl = "https://kogollmrelaysocket.parikshithv.in";
 
 const ChatContext = createContext();
 
@@ -18,17 +17,23 @@ export const ChatProvider = ({ children }) => {
     const [chatSessions, setChatSessions] = useState([]);
     const [chatMessages, setChatMessages] = useState([]);
     const [backendSocket, setBackendSocket] = useState(null);
-    const [relayServerSocket, setRelayServerSocket] = useState(null)
+
     const [isLoading, setIsLoading] = useState(false)
 
     let shouldCreateNewSession = useRef(false)
-
+    let roomIdRef = useRef("kogo_room_id")
 
     useEffect(() => {
+
+        window.addEventListener("message", (event) => {
+            if (event.data?.roomId) {
+                roomIdRef.current = event.data.roomId
+                console.log("Received Room ID:", roomIdRef.current);
+            }
+        });
         shouldCreateNewSession.current = true
 
         const newBackendSocket = io(BackendServerUrl, { transports: ['websocket'], });
-        // const newRelayServerSocket = io(RelayServerUrl)
 
         newBackendSocket.on('connect', () => {
             console.log('Connected to WebSocket server');
@@ -36,7 +41,7 @@ export const ChatProvider = ({ children }) => {
         });
 
         newBackendSocket.on('message', (msg) => {
-            // console.log("msg received ", JSON.stringify(msg))
+            console.log("msg received ", JSON.stringify(msg))
             console.log("should create new session ", shouldCreateNewSession.current)
             if (shouldCreateNewSession.current) {
                 _createNewChatSession(msg)
@@ -58,25 +63,8 @@ export const ChatProvider = ({ children }) => {
 
         _fetchChatSessions()
 
-        // newRelayServerSocket.on('connect', () => {
-        //     console.log('Connected to Relayserver server');
-        //     newRelayServerSocket.on("roomId", (roomId) => {
-        //         console.log("Received room ID:", roomId);
-
-        //         // Store the room ID for future use
-        //         // For example, you can use it in your API requests
-        //     });
-        // });
-
-        // newRelayServerSocket.on('disconnect', () => {
-        //     console.log('Disconnected from relay server');
-        // });
-
-        // setRelayServerSocket(newRelayServerSocket)
-
         return () => {
             newBackendSocket.disconnect();
-            // newRelayServerSocket.disconnect()
         };
     }, []);
 
@@ -174,6 +162,7 @@ export const ChatProvider = ({ children }) => {
             thread_id: chatMessages.length > 1 ? chatMessages[1].thread_id : "",
             deployment_id: "6772400f68158be76262b2a3",
             kogo_swarm_id: null,
+            app_room_id: roomIdRef.current
         };
         console.log("Sending message:", messagePayload);
         backendSocket.emit("chat_kogoos", messagePayload, (response) => {

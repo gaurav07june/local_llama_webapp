@@ -4,6 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useChat } from "../../context/ChatContext";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Feather from '@expo/vector-icons/Feather';
+import CircleSolid from '../../svgs/CircleSolid'
+import PaperClip from '../../svgs/PaperClip'
 
 const ChatInput = () => {
     const [message, setMessage] = useState("");
@@ -36,12 +38,14 @@ const ChatInput = () => {
                 <TouchableOpacity
                     disabled={true}
                     onPress={() => { }}>
-                    <Feather name="paperclip" size={24} color="gray" />
+                    {/* <Feather name="paperclip" size={24} color="gray" /> */}
+                    <PaperClip width={20} height={20} color="gray" />
                 </TouchableOpacity>
                 <TouchableOpacity
                     disabled={message?.length == 0 ? true : false}
                     onPress={handleSend}>
-                    <FontAwesome5 name="arrow-circle-up" size={24} color={message?.length > 0 ? "black" : "gray"} />
+                    <CircleSolid width={30} height={30} color={message?.length > 0 ? "black" : "gray"} />
+                    {/* <FontAwesome5 name="arrow-circle-up" size={24} color={message?.length > 0 ? "black" : "gray"} /> */}
                 </TouchableOpacity>
             </View>
         </View>
@@ -54,6 +58,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 8,
         backgroundColor: "#f4f4f4",
+        marginBottom: 30
     },
     input: {
         width: '100%',
