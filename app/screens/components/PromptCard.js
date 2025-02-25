@@ -1,12 +1,22 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
-const PromptCard = ({ prompt }) => {
+const PromptCard = ({ prompt, handleSend }) => {
     return (
-        <View style={styles.card}>
+        <TouchableOpacity onPress={() => handleSend(prompt)} style={styles.card}>
             <Text style={styles.header}>{prompt.header}</Text>
-            <Text style={styles.subHeader}>{prompt.subHeader}</Text>
-        </View>
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+            }}>
+                <Text style={styles.subHeader}>{prompt.subHeader}</Text>
+                <AntDesign name="arrowup" size={12} color="gray" />
+
+            </View>
+
+        </TouchableOpacity>
     );
 };
 
@@ -14,14 +24,14 @@ const styles = StyleSheet.create({
     card: {
         width: 200,
         height: 100,
-        backgroundColor: "#333",
+        backgroundColor: "#f4f4f4",
         borderRadius: 12,
         padding: 10,
         marginRight: 10,
         justifyContent: "space-between",
     },
     header: {
-        color: "white",
+        color: "black",
         fontSize: 14,
         fontWeight: "medium",
     },

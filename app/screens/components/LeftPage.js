@@ -1,3 +1,4 @@
+
 import React, { useRef } from "react";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import Octicons from '@expo/vector-icons/Octicons';
@@ -6,7 +7,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useChat } from "../../context/ChatContext";
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 
-const ChatSessions = ({
+const LeftPage = ({
     handleLeftBtn, isLeftBtn, selectedIndex, onUpdatIndex
 }) => {
 
@@ -145,4 +146,4 @@ const AppColor = {
     border: "#dae2ee"
 }
 
-export default ChatSessions;
+export default LeftPage;
