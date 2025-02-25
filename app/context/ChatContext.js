@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { createNewChatSession, deleteAllSession, getAllChatSessions, saveMessageToThread, getMessagesForThread, deleteThreadChats } from '../util/ChatStoreHelper'
 
@@ -21,11 +21,11 @@ export const ChatProvider = ({ children }) => {
     const [relayServerSocket, setRelayServerSocket] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
 
-    var shouldCreateNewSession = false
+    let shouldCreateNewSession = useRef(false)
 
 
     useEffect(() => {
-        shouldCreateNewSession = true
+        shouldCreateNewSession.current = true
 
         const newBackendSocket = io(BackendServerUrl, { transports: ['websocket'], });
         // const newRelayServerSocket = io(RelayServerUrl)
@@ -37,8 +37,8 @@ export const ChatProvider = ({ children }) => {
 
         newBackendSocket.on('message', (msg) => {
             // console.log("msg received ", JSON.stringify(msg))
-            console.log("should create new session ", shouldCreateNewSession)
-            if (shouldCreateNewSession) {
+            console.log("should create new session ", shouldCreateNewSession.current)
+            if (shouldCreateNewSession.current) {
                 _createNewChatSession(msg)
             } else {
                 _storeMesssage(msg.thread_id, msg)
@@ -81,9 +81,9 @@ export const ChatProvider = ({ children }) => {
     }, []);
 
     const _fetchChatSessions = async () => {
-        console.log('fetching all chat sesions')
+        // console.log('fetching all chat sesions')
         const sessions = await getAllChatSessions();
-        console.log("all sessions ", JSON.stringify(sessions))
+        // console.log("all sessions ", JSON.stringify(sessions))
         setChatSessions(sessions);
     };
 
@@ -92,7 +92,7 @@ export const ChatProvider = ({ children }) => {
             console.log('creating new chat session with thread id ', msgData.thread_id)
             const threadId = await createNewChatSession(msgData.thread_id);
             console.log("chat session created with thread id ", threadId)
-            shouldCreateNewSession = false
+            shouldCreateNewSession.current = false
             await _storeMesssage(threadId, msgData)
             await _fetchChatSessions()
         } catch (error) {
@@ -137,6 +137,8 @@ export const ChatProvider = ({ children }) => {
     }
 
     const onCreateNewThread = () => {
+        shouldCreateNewSession.current = true
+        console.log("shold create new s ", shouldCreateNewSession.current)
         setChatMessages([])
     }
 

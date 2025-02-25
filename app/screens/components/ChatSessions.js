@@ -31,6 +31,7 @@ const ChatSessions = ({
     }
     const onCreateNewMassage = () => {
         onCreateNewThread()
+        onUpdatIndex(-1)
     }
 
     const _renderItem = ({ item, index }) => {

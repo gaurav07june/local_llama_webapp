@@ -7,7 +7,7 @@ export const createNewChatSession = async (thread_id) => {
         const chatSessions = storedSessions ? JSON.parse(storedSessions) : [];
 
         const newSession = { thread_id, msgData: [] };
-        chatSessions.push(newSession);
+        chatSessions.unshift(newSession);
 
         await AsyncStorage.setItem("chat_sessions", JSON.stringify(chatSessions));
 
@@ -33,8 +33,8 @@ export const saveMessageToThread = async (thread_id, message) => {
         let chatSessions = storedSessions ? JSON.parse(storedSessions) : [];
 
         const sessionIndex = chatSessions.findIndex(session => session.thread_id === thread_id);
-        console.log("session index", sessionIndex)
-        console.log("dat to be pushed to ", JSON.stringify(chatSessions[sessionIndex]))
+        // console.log("session index", sessionIndex)
+        // console.log("dat to be pushed to ", JSON.stringify(chatSessions[sessionIndex]))
 
         if (sessionIndex !== -1) {
             chatSessions[sessionIndex].msgData.push(message);
