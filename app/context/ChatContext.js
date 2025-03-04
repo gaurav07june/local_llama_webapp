@@ -160,7 +160,8 @@ export const ChatProvider = ({ children }) => {
             guest_sender: "kogo",
             guest_name: "Bharat Mobility",
             thread_id: chatMessages.length > 1 ? chatMessages[1].thread_id : "",
-            deployment_id: "6772400f68158be76262b2a3",
+            // deployment_id: "6772400f68158be76262b2a3",
+            deployment_id: "67c6a89949cbf7fc4906b0bb",
             kogo_swarm_id: null,
             app_room_id: roomIdRef.current
         };

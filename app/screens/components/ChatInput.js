@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useChat } from "../../context/ChatContext";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
@@ -12,12 +12,15 @@ const ChatInput = () => {
     const { sendMessage } = useChat();
 
     const handleSend = () => {
-        sendMessage(message);
         setMessage("");
+        sendMessage(message);
+
     };
 
     return (
         <View style={styles.inputContainer}>
+
+
             <TextInput
                 style={styles.input}
                 placeholder="Ask KOGO or @mention an agent"
@@ -29,24 +32,24 @@ const ChatInput = () => {
                 onSubmitEditing={handleSend}
             />
             <View style={{
-                // width: '100%',
                 marginTop: 6,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center'
             }}>
+
                 <TouchableOpacity
-                    disabled={true}
-                    onPress={() => { }}>
-                    {/* <Feather name="paperclip" size={24} color="gray" /> */}
-                    <PaperClip width={20} height={20} color="gray" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    disabled={message?.length == 0 ? true : false}
                     onPress={handleSend}>
                     <CircleSolid width={30} height={30} color={message?.length > 0 ? "black" : "gray"} />
-                    {/* <FontAwesome5 name="arrow-circle-up" size={24} color={message?.length > 0 ? "black" : "gray"} /> */}
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => { }}>
+                    <PaperClip width={20} height={20} color="gray" />
+                </TouchableOpacity>
+
+
+
             </View>
         </View>
     );
@@ -54,11 +57,13 @@ const ChatInput = () => {
 
 const styles = StyleSheet.create({
     inputContainer: {
-        width: '100%',
+        position: 'absolute',
+        bottom: 30,
+        left: 20,
+        right: 20,
         padding: 10,
         borderRadius: 8,
         backgroundColor: "#f4f4f4",
-        marginBottom: 30
     },
     input: {
         width: '100%',

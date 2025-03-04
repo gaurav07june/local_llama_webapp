@@ -5,6 +5,10 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useChat } from "../../context/ChatContext";
 import EvilIcons from '@expo/vector-icons/EvilIcons';
+import SquareMinimize from '../../svgs/SquareMinimize'
+import SquareMaximize from '../../svgs/SquareMaximize'
+import Plus from '../../svgs/Plus'
+import Trash from '../../svgs/Trash'
 
 const ChatSessions = ({
     handleLeftBtn, isLeftBtn, selectedIndex, onUpdatIndex
@@ -48,7 +52,8 @@ const ChatSessions = ({
                 <TouchableOpacity
                     style={{ flex: .20, alignItems: 'flex-end' }}
                     onPress={() => _onTheadDelete(item.thread_id)}>
-                    <EvilIcons name="trash" size={18} color="black" />
+                    <Trash width={12} height={12} color="gray" />
+                    {/* <EvilIcons name="trash" size={18} color="black" /> */}
                 </TouchableOpacity>
 
 
@@ -72,8 +77,10 @@ const ChatSessions = ({
                 }}
                 onPress={() => handleLeftBtn()}>
                 {isLeftBtn ?
-                    <Octicons name="sidebar-expand" size={24} color="black" />
-                    : <Octicons name="sidebar-collapse" size={24} color="black" />
+                    <SquareMinimize width={24} height={24} color="black" /> :
+                    // <Octicons name="sidebar-expand" size={24} color="black" />
+                    <SquareMaximize width={24} height={24} color="black" />
+                    // : <Octicons name="sidebar-collapse" size={24} color="black" />
                 }
             </TouchableOpacity>
             {isLeftBtn ?
@@ -90,8 +97,9 @@ const ChatSessions = ({
                                 justifyContent: 'center',
 
                             }}>
+                                <Plus width={18} height={18} color="black" />
+                                {/* <Ionicons name="add" size={20} color="black" /> */}
 
-                                <Ionicons name="add" size={20} color="black" />
                                 <View style={{ width: 6 }} />
                                 <Text style={styles.listHeader}>
                                     New Chat
@@ -101,7 +109,8 @@ const ChatSessions = ({
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => _deleteAllSessions()}>
-                            <EvilIcons name="trash" size={24} color="black" />
+                            <Trash width={20} height={20} color="black" />
+                            {/* <EvilIcons name="trash" size={24} color="black" /> */}
                         </TouchableOpacity>
                     </View>
                     <View style={{ height: 12 }} />
@@ -116,6 +125,10 @@ const ChatSessions = ({
 
                 : null
             }
+
+            <Text style={{ fontSize: 12, color: 'gray', fontWeight: "thin" }}>
+                Version : 0.0.1
+            </Text>
         </View>
 
     )

@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import ArrowUp from '../../svgs/ArrowUp'
+// import AntDesign from '@expo/vector-icons/AntDesign';
 
 const PromptCard = ({ prompt, handleSend }) => {
     return (
@@ -12,7 +13,8 @@ const PromptCard = ({ prompt, handleSend }) => {
                 alignItems: 'center'
             }}>
                 <Text style={styles.subHeader}>{prompt.subHeader}</Text>
-                <AntDesign name="arrowup" size={12} color="gray" />
+                <ArrowUp width={12} height={12} color='gray' />
+                {/* <AntDesign name="arrowup" size={12} color="gray" /> */}
 
             </View>
 

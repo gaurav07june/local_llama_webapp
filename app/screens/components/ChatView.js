@@ -4,6 +4,10 @@ import Feather from '@expo/vector-icons/Feather';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useChat } from "../../context/ChatContext"
+import Copy from '../../svgs/Copy'
+import ThumbsUp from '../../svgs/ThumbsUp'
+import ThubsDown from '../../svgs/ThumbsDown'
+import Edit from '../../svgs/Edit'
 
 
 const ChatView = () => {
@@ -25,13 +29,17 @@ const ChatView = () => {
                     <Text style={styles.text}>{item.message}</Text>
                     {item.is_boat_reply == "yes" &&
                         <View style={styles.iconsContainer}>
-                            <FontAwesome name="edit" size={15} color="#808080" />
+                            <Edit width={14} height={14} color="#808080" />
+                            {/* <FontAwesome name="edit" size={15} color="#808080" /> */}
                             <View style={styles.spacer} />
-                            <SimpleLineIcons name="dislike" size={15} color="#808080" />
+                            <ThubsDown width={14} height={14} color="#808080" />
+                            {/* <SimpleLineIcons name="dislike" size={15} color="#808080" /> */}
                             <View style={styles.spacer} />
-                            <SimpleLineIcons name="like" size={15} color="#808080" />
+                            <ThumbsUp width={14} height={14} color="#808080" />
+                            {/* <SimpleLineIcons name="like" size={15} color="#808080" /> */}
                             <View style={styles.spacer} />
-                            <Feather name="copy" size={15} color="#808080" />
+                            <Edit width={14} height={14} color="#808080" />
+                            {/* <Feather name="copy" size={15} color="#808080" /> */}
 
 
                         </View>
